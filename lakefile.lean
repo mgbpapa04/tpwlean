@@ -1,4 +1,4 @@
-import Lake
+laimport Lake
 open Lake DSL
 
 package «tpwlean» where
