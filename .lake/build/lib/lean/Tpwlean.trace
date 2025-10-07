@@ -1,0 +1,27 @@
+{"synthetic": false,
+ "outputs":
+ {"o": ["4390083115884541465"],
+  "i": "8624668676424833895",
+  "c": "14755436057001326470"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/workspaces/tpwlean/.lake/packages/Cli/.lake/build/lib/lean:/workspaces/tpwlean/.lake/packages/batteries/.lake/build/lib/lean:/workspaces/tpwlean/.lake/packages/Qq/.lake/build/lib/lean:/workspaces/tpwlean/.lake/packages/aesop/.lake/build/lib/lean:/workspaces/tpwlean/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspaces/tpwlean/.lake/packages/importGraph/.lake/build/lib/lean:/workspaces/tpwlean/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspaces/tpwlean/.lake/packages/plausible/.lake/build/lib/lean:/workspaces/tpwlean/.lake/packages/mathlib/.lake/build/lib/lean:/workspaces/tpwlean/.lake/build/lib/lean /home/codespace/.elan/toolchains/leanprover--lean4---v4.24.0-rc1/bin/lean /workspaces/tpwlean/Tpwlean.lean -o /workspaces/tpwlean/.lake/build/lib/lean/Tpwlean.olean -i /workspaces/tpwlean/.lake/build/lib/lean/Tpwlean.ilean -c /workspaces/tpwlean/.lake/build/ir/Tpwlean.c --setup /workspaces/tpwlean/.lake/build/ir/Tpwlean.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["Tpwlean:deps",
+   [["deps",
+     [["tpwlean/Tpwlean:extraDep", [["@tpwlean:extraDep", "1723"]]],
+      ["imports",
+       [["Mathlib.Tactic transitive imports (legacy)", "17670274865709514533"],
+        ["Mathlib.Tactic:importAllArts", "7197590995583949584"]]]]],
+    ["libs",
+     [["import dynlibs", "1723"],
+      ["package external libraries", "1723"],
+      ["module dynlibs", "1723"],
+      ["module plugins", "1723"]]]]],
+  ["Lean 4.24.0, commit 919e297292280cdb27598edd4e03437be5850221",
+   "16820442660988836695"],
+  ["/workspaces/tpwlean/Tpwlean.lean", "8810924751101829230"],
+  ["options", "1723"],
+  ["Module.leanArgs: #[]", "1723"]],
+ "depHash": "6835837053459549555"}
