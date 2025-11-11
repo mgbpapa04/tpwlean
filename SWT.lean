@@ -19,36 +19,68 @@ variable {A : F.topologicalClosure}
 
 -- set_option diagnostics true
 
+
+/- Definitions of Polynomials -/
+
+
+/- Weierstrass Approximation Theorem -/
+
+
+/- Definition of Uniform norm -/
+
+
+/- Definition of Uniform convergence -/
+
+
+
 /- Proof that a Subalgebra is topologically closed under pointwise absolute value -/
-lemma SubAlgClosureUnderAbs (F : Subalgebra ℝ C(Ω, ℝ)) (f : F.topologicalClosure) : |(f : C(Ω, ℝ))| ∈ F.topologicalClosure := by
+lemma SubAlgClosureUnderAbs (F : Subalgebra ℝ C(Ω, ℝ)) (f : F.topologicalClosure) :
+    |(f : C(Ω, ℝ))| ∈ F.topologicalClosure := by
   sorry
+
+
+/- Proof of Max identity with absolute value identifies -/
+lemma MaxIdentityAbs (f g : C(Ω, ℝ)) :
+    2 * (f ⊔ g) = f + g + |f - g| := by
+  sorry
+
+
+/- Proof of Min identity with absolute value identifies -/
+lemma MinIdentityAbs (f g : C(Ω, ℝ)) :
+    2 * (f ⊓ g) = f + g - |f - g| := by
+  sorry
+
 
 /- Proof that a Subalgebra is topologically closed under pointwise maximum -/
-lemma SubAlgClosureUnderMax (F : Subalgebra ℝ C(Ω, ℝ)) (f g : F.topologicalClosure) : ↑f ⊔ ↑g ∈ F.topologicalClosure := by
+lemma SubAlgClosureUnderMax (F : Subalgebra ℝ C(Ω, ℝ)) (f g : F.topologicalClosure) :
+    ↑f ⊔ ↑g ∈ F.topologicalClosure := by
   sorry
+
 
 /- Proof that a Subalgebra is topologically closed under pointwise minimum -/
-lemma SubAlgClosureUnderMin (F : Subalgebra ℝ C(Ω, ℝ)) (f g : F.topologicalClosure) : ↑f ⊓ ↑g ∈ F.topologicalClosure := by
+lemma SubAlgClosureUnderMin (F : Subalgebra ℝ C(Ω, ℝ)) (f g : F.topologicalClosure) :
+    ↑f ⊓ ↑g ∈ F.topologicalClosure := by
   sorry
 
--- /- Definition of a non-zero constant function -/
--- def NonZeroConst {α β : Type*} (A : Set (α → β)) : Prop :=
---   ∀ {x y : α}, x ≠ y → ∃ f ∈ A, (f x ≠ f y)
 
 /- Definition of a Set of functions separating points -/
 def SetSeparatesPoints {α β : Type*} (A : Set (α → β)) : Prop :=
   ∀ {x y : α}, x ≠ y → ∃ f ∈ A, (f x ≠ f y)
 
+
 /- Definition of what it means for a Subalgebra of C(Ω, ℝ) to separate points -/
 abbrev SeparatesPoints (F : Subalgebra ℝ C(Ω, ℝ)) : Prop :=
   SetSeparatesPoints ((fun f : C(Ω, ℝ) ↦ (f : Ω → ℝ)) '' ↑F)
 
+
 /- Proof that if the Subalgebra separates points, then so does its Topological Closure -/
-lemma SubAlgClosureSeparatesPoints (F : Subalgebra ℝ C(Ω, ℝ)) (hF: F.SeparatesPoints) : F.topologicalClosure.SeparatesPoints := by
+lemma SubAlgClosureSeparatesPoints (F : Subalgebra ℝ C(Ω, ℝ)) (hF: F.SeparatesPoints) :
+    F.topologicalClosure.SeparatesPoints := by
   sorry
 
 
 /- The Stone-Weierstrass Theorem -/
-theorem Stone_Weierstrass (F : Subalgebra ℝ C(Ω, ℝ)) (hF : F.SeparatesPoints) : F.topologicalClosure = C(Ω, ℝ) := by
+theorem Stone_Weierstrass (F : Subalgebra ℝ C(Ω, ℝ)) (hF : F.SeparatesPoints) :
+    F.topologicalClosure = C(Ω, ℝ) := by
   -- apply hF
   sorry
