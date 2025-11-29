@@ -70,11 +70,22 @@ lemma exists_mem_near_abs (ε : ℝ) (hε : 0 < ε) (f : C(Ω, ℝ)) (hf : f ∈
     exact hp
   done
 
---   apply Metric.mem_closure_iff.mpr
-
 lemma abs_mem_subalg (f : C(Ω, ℝ)) (hf : f ∈ A) (hA : IsClosed (A : Set C(Ω, ℝ))):
     |f| ∈ A := by
-  sorry
+  rw [← SetLike.mem_coe]
+  rw [← hA.closure_eq]
+  rw [Metric.mem_closure_iff]
+  intro ε hε
+  obtain ⟨a, ha, ha_dist⟩ := exists_mem_near_abs ε hε f hf
+
+  use a
+  constructor
+  · exact ha
+  · rw [dist_eq_norm]
+    rw [← neg_sub a |f|]
+    rw [norm_neg]
+    exact ha_dist
+  done
 
 /- Proof of Max identity with absolute value for Reals -/
 lemma max_id_abs (x y : ℝ) : 2 * max x y = (x + y + |x - y|) := by
