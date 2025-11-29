@@ -17,76 +17,67 @@ import Mathlib.Topology.Instances.Real.Lemmas
 import Mathlib.Algebra.Polynomial.Eval.Defs
 import Mathlib.Topology.Algebra.Order.Group
 import Mathlib.Topology.ContinuousMap.Bounded.Normed
+import Mathlib.Topology.ContinuousMap.Algebra
 
 variable {Ω : Type*} [TopologicalSpace Ω] [T2Space Ω] [CompactSpace Ω]
-variable {F : Subalgebra ℝ C(Ω, ℝ)}
-variable (A := F.topologicalClosure)
+variable {A : Subalgebra ℝ C(Ω, ℝ)}
+variable (hA_closed : IsClosed (A : Set C(Ω, ℝ)))
 
 set_option diagnostics true
 set_option linter.unusedTactic false
 set_option linter.unusedSectionVars false
 
+open ContinuousMap Set
 
 /- For a polynomial p and a function a ∈ A, p ∘ a ∈ A -/
-lemma SubAlgClosureUnderPolyComp (f : C(Ω, ℝ)) (hf : f ∈ A) (p : Polynomial ℝ):
-    (Polynomial.aeval f p) ∈ A := by
+lemma polynomial_comp_mem_subalg (p : Polynomial ℝ) (f : C(Ω, ℝ)) (hf : f ∈ A) :
+    (p.toContinuousMap.comp f) ∈ A := by
   sorry
 
 /- Proof that a Subalgebra is topologically closed under pointwise absolute value -/
-lemma SubAlgClosureUnderAbs (f : C(Ω, ℝ)) (hf : f ∈ A):
-    |f| ∈ A := by
+lemma exists_mem_near_abs (ε : ℝ) (hε : 0 < ε) (f : C(Ω, ℝ)) (hf : f ∈ A) :
+    ∃ g ∈ A, ‖g - |f|‖ < ε := by
 
-  -- Show that f(Ω) is compact (with Ω compact)
-  have h_image_compact : IsCompact (f '' Set.univ) := by
-    apply IsCompact.image
-    · apply isCompact_univ
-    · exact f.continuous
-
-  -- Show that f(Ω) ⊆ ℝ is bounded by BWT
-  have h_image_bounded : Bornology.IsBounded (f '' Set.univ) := by
-    apply h_image_compact.isBounded
-
-  -- Define the interval [-M, M] which is the domain of g=|·|
   let M := ‖f‖
-  let I := Set.Icc (-M) M
-  let g: I → ℝ := fun x ↦ |x|
+  let K := Icc (-M) M
 
-  -- Show that f(Ω) ⊆ I = [-M, M]
-  have h_f_range : (f '' Set.univ) ⊆ I := by
-    -- apply BoundedContinuousFunction.neg_norm_le_apply
-    -- apply BoundedContinuousFunction.apply_le_norm
-    -- rw[Set.Icc_subset_Icc]
-    sorry
+  -- Proof that f maps into K
+  have h_range : MapsTo f univ K := by
+    intro x _
+    rw [mem_Icc, ← @abs_le]
+    exact norm_coe_le_norm f x
+
+  let g : C(K, ℝ) := ⟨fun y => |(y : ℝ)|, continuous_abs.comp continuous_subtype_val⟩
 
   -- Show that there exists a polynomial that can arbitrarily approximate abs on I by Weierstrass Approximation
-  have Weierstrass : ∀ ε > 0, ∃ (p : Polynomial ℝ), ∀ y ∈ I, |Polynomial.eval y p - g y| < ε := by
-    apply exists_polynomial_near_of_continuousOn
-    apply ContinuousOn.abs
-    exact continuousOn_id' (Set.Icc (-M) M)
+  have Weierstrass : ∃ (p : Polynomial ℝ), ‖p.toContinuousMapOn K - g‖ < ε := by
+    apply exists_polynomial_near_continuousMap
+    exact hε
 
-  -- Re-write the goal to be equivalent to showing there is an element b ∈ A which can arbitrarily approximate |f|
-  apply Metric.mem_closure_iff.mpr
+  obtain ⟨p, hp⟩ := Weierstrass
 
-  -- Fix a specific ε > 0
-  intro (ε : ℝ) (hε : ε > 0)
+  use p.toContinuousMap.comp f
 
-  -- Choose the polynomial p that arbitrarily approximates |·| on I (Weierstrass)
-  let p : Polynomial ℝ := Exists.choose (Weierstrass ε hε)
+  have ha : p.toContinuousMap.comp f ∈ A := by
+    apply polynomial_comp_mem_subalg
+    apply hf
 
-  -- Use the fact that p ∘ f ∈ A as A is the topological closure of a subalgebra
-  apply SubAlgClosureUnderPolyComp _ f p
-
-  -- Show that b = p ∘ f that arbitrarily approximates |f|
-  have : ‖|f| - Polynomial.aeval f p‖ < ε := by
-    sorry
-
-  -- Show that this means |f| ∈ A
-
+  constructor
+  · apply ha
+  · rw [ContinuousMap.norm_lt_iff _ hε] at hp ⊢
+    intro x
+    specialize hp ⟨f x, h_range (Set.mem_univ x)⟩
+    exact hp
   done
 
+--   apply Metric.mem_closure_iff.mpr
+
+lemma abs_mem_subalg (f : C(Ω, ℝ)) (hf : f ∈ A) (hA : IsClosed (A : Set C(Ω, ℝ))):
+    |f| ∈ A := by
+  sorry
 
 /- Proof of Max identity with absolute value for Reals -/
-lemma MaxIdentityAbsR (x y : ℝ) : 2 * max x y = (x + y + |x - y|) := by
+lemma max_id_abs (x y : ℝ) : 2 * max x y = (x + y + |x - y|) := by
   cases le_total x y with
   | inl leq =>
     rw[max_eq_right leq]
@@ -96,12 +87,11 @@ lemma MaxIdentityAbsR (x y : ℝ) : 2 * max x y = (x + y + |x - y|) := by
     rw[max_eq_left geq]
     rw [abs_of_nonneg (sub_nonneg_of_le geq)]
     ring
-
   done
 
 
 /- Proof of Min identity with absolute value for Reals -/
-lemma MinIdentityAbsR (x y : ℝ) : 2 * min x y = (x + y - |x - y|) := by
+lemma min_id_abs (x y : ℝ) : 2 * min x y = (x + y - |x - y|) := by
   cases le_total x y with
   | inl leq =>
     rw[min_eq_left leq]
@@ -116,33 +106,33 @@ lemma MinIdentityAbsR (x y : ℝ) : 2 * min x y = (x + y - |x - y|) := by
 
 
 /- Proof of pointwise Max identity with absolute value for Functions -/
-lemma MaxIdentityAbsFunc {X} [TopologicalSpace X] (f g : C(X, ℝ)) :
+lemma max_id_abs_func (f g : C(Ω, ℝ)) :
     2 • (f ⊔ g) = (f + g + |f - g|) := by
   ext a
   rw [@ContinuousMap.nsmul_apply]
   simp
-  rw [← MaxIdentityAbsR]
+  rw [← max_id_abs]
   done
 
 
 /- Proof of pointwise Min identity with absolute value for Functions -/
-lemma MinIdentityAbsFunc {X} [TopologicalSpace X] (f g : C(X, ℝ)) :
+lemma min_id_abs_func (f g : C(Ω, ℝ)) :
     2 • (f ⊓ g) = (f + g - |f - g|) := by
   ext a
   rw [@ContinuousMap.nsmul_apply]
   simp
-  rw [← MinIdentityAbsR]
+  rw [← min_id_abs]
   done
 
 
 /- Proof that a Subalgebra is topologically closed under pointwise maximum -/
-lemma SubAlgClosureUnderMax (F : Subalgebra ℝ C(Ω, ℝ)) (f g : A) :
+lemma sup_mem_of_closed_subalg (f g : A) (hA : IsClosed (A : Set C(Ω, ℝ))) :
     ↑f ⊔ ↑g ∈ A := by
   sorry
 
 
 /- Proof that a Subalgebra is topologically closed under pointwise minimum -/
-lemma SubAlgClosureUnderMin (F : Subalgebra ℝ C(Ω, ℝ)) (f g : A) :
+lemma inf_mem_of_closed_subalg (f g : A) (hA : IsClosed (A : Set C(Ω, ℝ))) :
     ↑f ⊓ ↑g ∈ A := by
   sorry
 
@@ -154,15 +144,15 @@ def SetSeparatesPoints {α β : Type*} (S : Set (α → β)) : Prop :=
 
 /- Definition of what it means for a Subalgebra of C(Ω, ℝ) to separate points -/
 abbrev SeparatesPoints : Prop :=
-  SetSeparatesPoints ((fun f : C(Ω, ℝ) ↦ (f : Ω → ℝ)) '' ↑F)
+  SetSeparatesPoints ((fun f : C(Ω, ℝ) ↦ (f : Ω → ℝ)) '' ↑A)
 
 
 -- lemma Urysohn () : F.SeparatesPoints
 
 
 /- Proof that if the Subalgebra separates points, then so does its Topological Closure -/
-lemma SubAlgClosureSeparatesPoints (hF : F.SeparatesPoints) :
-    A.SeparatesPoints := by
+lemma subalg_closure_sep_points (h_sep : A.SeparatesPoints) :
+    A.topologicalClosure.SeparatesPoints := by
   sorry
 
 -- lemma SubAlgClosureMatchesAt2Points {f : C(Ω, ℝ)} {g_xy : A} (F : Subalgebra ℝ C(Ω, ℝ)) (hF: F.SeparatesPoints) :
@@ -171,7 +161,6 @@ lemma SubAlgClosureSeparatesPoints (hF : F.SeparatesPoints) :
 
 
 /- The Stone-Weierstrass Theorem -/
-theorem Stone_Weierstrass (h1 : 1 ∈ F) (hF : F.SeparatesPoints) :
-    A = C(Ω, ℝ) := by
-
+theorem stone_weierstrass (h1 : 1 ∈ A) (h_sep : A.SeparatesPoints) :
+    A.topologicalClosure = ⊤ := by
   sorry
