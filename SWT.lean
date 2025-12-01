@@ -1,34 +1,20 @@
--- SWT Imports
+/- Imports -/
 import Mathlib.Tactic
-import Mathlib.Topology.Compactness.Compact
-import Mathlib.Topology.UniformSpace.Compact
-import Mathlib.Topology.ContinuousMap.Basic
-import Mathlib.Topology.EMetricSpace.Defs
-import Mathlib.Topology.ContinuousMap.Compact
-import Mathlib.Topology.DenseEmbedding
-import Mathlib.Topology.Separation.Hausdorff
-import Mathlib.Algebra.Algebra.Subalgebra.Basic
 import Mathlib.Topology.ContinuousMap.Lattice
-import Mathlib.Topology.Order.Basic
-import Mathlib.Topology.Instances.Real.Lemmas
 import Mathlib.Topology.ContinuousMap.Weierstrass
-import Mathlib.Data.Real.Basic
-import Mathlib.Topology.Instances.Real.Lemmas
-import Mathlib.Algebra.Polynomial.Eval.Defs
-import Mathlib.RingTheory.Polynomial.Basic
-import Mathlib.Topology.Algebra.Order.Group
-import Mathlib.Topology.ContinuousMap.Bounded.Normed
-import Mathlib.Topology.ContinuousMap.Algebra
 
+/- Variable declaration (to be changed to remove extra assumptions)-/
 variable {Ω : Type*} [TopologicalSpace Ω] [T2Space Ω] [CompactSpace Ω]
 variable {A : Subalgebra ℝ C(Ω, ℝ)}
 variable (hA_closed : IsClosed (A : Set C(Ω, ℝ)))
 
+/- Linters -/
 set_option diagnostics true
 set_option linter.unusedTactic false
 set_option linter.unusedSectionVars false
 
 open ContinuousMap Set
+namespace SWT
 
 /- For a polynomial p and a function f ∈ A, p ∘ f ∈ A -/
 lemma polynomial_comp_mem_subalg (p : Polynomial ℝ) (f : C(Ω, ℝ)) (hf : f ∈ A) :
@@ -203,6 +189,7 @@ lemma inf_mem_of_closed_subalg (f g : A) (hA : IsClosed (A : Set C(Ω, ℝ))) :
 -- abbrev SeparatesPoints (A : Subalgebra ℝ C(Ω, ℝ)) : Prop :=
 --   Set.SeparatesPoints (A : Set C(Ω, ℝ))
 
+-- /- Uryshon Lemma -/
 
 -- lemma Urysohn () : F.SeparatesPoints
 
@@ -218,6 +205,7 @@ lemma subalg_closure_sep_points (h_sep : A.SeparatesPoints) :
     exact hf_in_A
   · exact hf_sep
 
+/- Proof that there exists a function in the Subalgebra that matches any function at 2 points -/
 -- lemma SubAlgClosureMatchesAt2Points {f : C(Ω, ℝ)} {g_xy : A} (hF: F.SeparatesPoints) :
 --     ∀ x y : Ω, x ≠ y → ∃ g_xy, (g_xy x = f x) ∧ (g_xy y = f y) := by
 --   sorry
@@ -227,3 +215,5 @@ lemma subalg_closure_sep_points (h_sep : A.SeparatesPoints) :
 theorem stone_weierstrass (h1 : 1 ∈ A) (h_sep : A.SeparatesPoints) :
     A.topologicalClosure = ⊤ := by
   sorry
+
+end SWT
