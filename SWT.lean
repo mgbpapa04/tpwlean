@@ -56,7 +56,7 @@ lemma polynomial_comp_mem_subalg (p : Polynomial ℝ) (f : C(Ω, ℝ)) (hf : f �
 
 /- Proof that pointwise absolute value of a function can be arbitrarily approximated in the subalgebra-/
 lemma exists_mem_near_abs (ε : ℝ) (hε : 0 < ε) (f : C(Ω, ℝ)) (hf : f ∈ A) :
-    ∃ a ∈ A, ‖a - |f|‖ < ε := by
+    ∃ a ∈ A, ‖a - |f|‖ < ε := by -- Swap this around
 
   -- Define an interval K that covers f(Ω)
   let M := ‖f‖
@@ -106,7 +106,7 @@ lemma abs_mem_subalg (f : C(Ω, ℝ)) (hf : f ∈ A) (hA : IsClosed (A : Set C(�
   -- Apply the result that |·| can be arbitrarily approximated
   obtain ⟨a, ha, ha_dist⟩ := exists_mem_near_abs ε hε f hf
   use a
-  
+
   constructor
   -- Use that a ∈ A
   · exact ha
@@ -120,26 +120,28 @@ lemma abs_mem_subalg (f : C(Ω, ℝ)) (hf : f ∈ A) (hA : IsClosed (A : Set C(�
 
 /- Proof of Max identity with absolute value for Reals -/
 lemma max_id_abs (x y : ℝ) : max x y = 1/2 * (x + y + |x - y|) := by
+  -- Split into the case where x ≤ y or y ≤ x
   cases le_total x y with
-  | inl leq =>
+  | inl leq => -- x ≤ y
     rw[max_eq_right leq]
     rw [abs_of_nonpos (sub_nonpos_of_le leq)]
     ring
-  | inr geq =>
+  | inr geq => -- x ≥ y
     rw[max_eq_left geq]
     rw [abs_of_nonneg (sub_nonneg_of_le geq)]
     ring
   done
 
 
-/- Proof of Min identity with absolute value for Reals -/
+/- Proof of Min identity with absolute value for Reals (rw using above)-/
 lemma min_id_abs (x y : ℝ) : min x y = 1/2 * (x + y - |x - y|) := by
+-- Split into the case where x ≤ y or y ≤ x
   cases le_total x y with
-  | inl leq =>
+  | inl leq => -- x ≤ y
     rw[min_eq_left leq]
     rw [abs_of_nonpos (sub_nonpos_of_le leq)]
     ring
-    | inr geq =>
+    | inr geq => -- x ≥ y
     rw[min_eq_right geq]
     rw [abs_of_nonneg (sub_nonneg_of_le geq)]
     ring
@@ -149,8 +151,10 @@ lemma min_id_abs (x y : ℝ) : min x y = 1/2 * (x + y - |x - y|) := by
 /- Proof of pointwise Max identity with absolute value for Functions -/
 lemma max_id_abs_func (f g : C(Ω, ℝ)) :
     f ⊔ g = (1/2 : ℝ) • (f + g + |f - g|) := by
+  -- Convert from functions into points
   ext a
   rw [@smul_apply, sup_apply]
+  -- Apply above result for max
   rw [max_id_abs]
   simp
   done
@@ -159,8 +163,10 @@ lemma max_id_abs_func (f g : C(Ω, ℝ)) :
 /- Proof of pointwise Min identity with absolute value for Functions -/
 lemma min_id_abs_func (f g : C(Ω, ℝ)) :
     f ⊓ g = (1/2 : ℝ) • (f + g - |f - g|) := by
+  -- Convert from functions into points
   ext a
   rw [@smul_apply, inf_apply]
+  -- Apply above result for min
   rw [min_id_abs]
   simp
   done
@@ -169,7 +175,9 @@ lemma min_id_abs_func (f g : C(Ω, ℝ)) :
 /- Proof that a Subalgebra is topologically closed under pointwise maximum -/
 lemma sup_mem_of_closed_subalg (f g : A) (hA : IsClosed (A : Set C(Ω, ℝ))) :
     ↑f ⊔ ↑g ∈ A := by
+  -- Apply the sup identity
   rw [max_id_abs_func]
+  -- Simplify and split into terms that are trivially in A
   simp only [one_div, smul_add]
   apply A.add_mem
   · apply A.add_mem
@@ -189,7 +197,9 @@ lemma sup_mem_of_closed_subalg (f g : A) (hA : IsClosed (A : Set C(Ω, ℝ))) :
 /- Proof that a Subalgebra is topologically closed under pointwise minimum -/
 lemma inf_mem_of_closed_subalg (f g : A) (hA : IsClosed (A : Set C(Ω, ℝ))) :
     ↑f ⊓ ↑g ∈ A := by
+  -- Apply the sup identity
   rw [min_id_abs_func]
+  -- Simplify and split into terms that are trivially in A
   simp only [one_div, smul_add, smul_sub]
   apply A.sub_mem
   · apply A.add_mem
@@ -223,13 +233,16 @@ lemma inf_mem_of_closed_subalg (f g : A) (hA : IsClosed (A : Set C(Ω, ℝ))) :
 /- Proof that if the Subalgebra separates points, then so does its Topological Closure -/
 lemma subalg_closure_sep_points (h_sep : A.SeparatesPoints) :
     A.topologicalClosure.SeparatesPoints := by
+  -- Rewrite using definition of separating points (unfold doesn't work?)
   intro x y h_neq
   obtain ⟨f, hf_in_A, hf_sep⟩ := h_sep h_neq
   use f
+  -- Use the fact that A ⊆ Closure(A)
   constructor
   · apply Set.image_mono A.le_topologicalClosure
     exact hf_in_A
   · exact hf_sep
+  done
 
 
 /- Proof that there exists a function in the Subalgebra that matches any function at 2 points -/
