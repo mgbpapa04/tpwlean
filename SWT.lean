@@ -1,36 +1,52 @@
+/- To Do List: -/
+-- Update definitions regarding polynomials and images of functions
+-- Redefine variables, assumptions and name spaces
+-- Comment code better
+-- Simplify lemmas with max/min or sup/inf
+-- Make the subalgebra non unital
+
 /- Imports -/
 import Mathlib.Tactic
 import Mathlib.Topology.ContinuousMap.Lattice
 import Mathlib.Topology.ContinuousMap.Weierstrass
-
-/- Variable declaration (to be changed to remove extra assumptions)-/
-variable {Ω : Type*} [TopologicalSpace Ω] [T2Space Ω] [CompactSpace Ω]
-variable {A : Subalgebra ℝ C(Ω, ℝ)}
-variable (hA_closed : IsClosed (A : Set C(Ω, ℝ)))
 
 /- Linters -/
 set_option diagnostics true
 set_option linter.unusedTactic false
 set_option linter.unusedSectionVars false
 
-open ContinuousMap Set
 namespace SWT
+open ContinuousMap Set
 
-/- For a polynomial p and a function f ∈ A, p ∘ f ∈ A -/
+/- Variable declaration (to be changed to remove extra assumptions)-/
+variable {Ω : Type*} [TopologicalSpace Ω] [T2Space Ω] [CompactSpace Ω]
+variable {A : Subalgebra ℝ C(Ω, ℝ)} -- Unital subalgebra
+variable (hA_closed : IsClosed (A : Set C(Ω, ℝ)))
+
+
+/- For a polynomial p and a function f ∈ A, p ∘ f ∈ A
+I suspect this needs to be redone using (aeval p).toRingHom -/
 lemma polynomial_comp_mem_subalg (p : Polynomial ℝ) (f : C(Ω, ℝ)) (hf : f ∈ A) :
     (p.toContinuousMap.comp f) ∈ A := by
+
+  -- Show that the composition is equal to the algebraic evaluation
   have h_eq : p.toContinuousMap.comp f = Polynomial.aeval f p := by
     ext x
     simp
 
+  -- Now prove the result for the aeval
   rw [h_eq]
 
+  -- By induction on polynomials:
   induction p using Polynomial.induction_on with
+  -- A constant function composed with f remains in the algebra (as it becomes a constant function)
   | C r =>
-    simp
+    simp only [Polynomial.aeval_C, algebraMap_mem] -- Uses that the algebra is unital so contains all constant functions
+  -- A monomial composed with f remains in the algebra (closed under scalar and elementwise multiplication)
   | monomial p hp =>
     simp only [map_mul, Polynomial.aeval_C, map_pow, Polynomial.aeval_X]
     finiteness
+  -- Addition of monomials remains in the algebra
   | add p q hp hq =>
     simp only [map_add]
     bound
@@ -40,57 +56,67 @@ lemma polynomial_comp_mem_subalg (p : Polynomial ℝ) (f : C(Ω, ℝ)) (hf : f �
 
 /- Proof that pointwise absolute value of a function can be arbitrarily approximated in the subalgebra-/
 lemma exists_mem_near_abs (ε : ℝ) (hε : 0 < ε) (f : C(Ω, ℝ)) (hf : f ∈ A) :
-    ∃ g ∈ A, ‖g - |f|‖ < ε := by
+    ∃ a ∈ A, ‖a - |f|‖ < ε := by
 
+  -- Define an interval K that covers f(Ω)
   let M := ‖f‖
   let K := Icc (-M) M
 
-  -- Proof that f maps into K
+  -- Show that the image of f is contained within k
   have h_range : MapsTo f univ K := by
     intro x _
     rw [mem_Icc, ← @abs_le]
     exact norm_coe_le_norm f x
 
+  -- Define a function g = |·| on the interval K
   let g : C(K, ℝ) := ⟨fun y => |(y : ℝ)|, continuous_abs.comp continuous_subtype_val⟩
 
-  -- Show that there exists a polynomial that can arbitrarily approximate abs on I by Weierstrass Approximation
+  -- Show that there exists a polynomial that can arbitrarily approximate g on K by Weierstrass Approximation
   have Weierstrass : ∃ (p : Polynomial ℝ), ‖p.toContinuousMapOn K - g‖ < ε := by
     apply exists_polynomial_near_continuousMap
     exact hε
 
+  -- Select a p for an arbitrary ε
   obtain ⟨p, hp⟩ := Weierstrass
 
-  use p.toContinuousMap.comp f
-
-  have ha : p.toContinuousMap.comp f ∈ A := by
-    apply polynomial_comp_mem_subalg
-    apply hf
+  -- Use p ∘ f as a in the proof to approximate g ∘ f = |f|
+  use p.toContinuousMap.comp f -- aeval?
 
   constructor
-  · apply ha
-  · rw [ContinuousMap.norm_lt_iff _ hε] at hp ⊢
-    intro x
-    specialize hp ⟨f x, h_range (Set.mem_univ x)⟩
+  -- Use the lemma that shows p ∘ f ∈ A
+  · apply polynomial_comp_mem_subalg
+    apply hf
+  --
+  · rw [ContinuousMap.norm_lt_iff _ hε] at hp ⊢ -- Apply "ext" to hp and our goal
+    intro x -- Fix an x
+    specialize hp ⟨f x, h_range (Set.mem_univ x)⟩ -- Exchange x ∈ K for f(x) ∈ f(Ω) ⊆ K where x ∈ Ω
     exact hp
   done
+
 
 /- Proof that a Subalgebra is topologically closed under pointwise absolute value -/
 lemma abs_mem_subalg (f : C(Ω, ℝ)) (hf : f ∈ A) (hA : IsClosed (A : Set C(Ω, ℝ))):
     |f| ∈ A := by
+  -- Re write the goal to use the epsilon definition
   rw [← SetLike.mem_coe]
   rw [← hA.closure_eq]
   rw [Metric.mem_closure_iff]
   intro ε hε
-  obtain ⟨a, ha, ha_dist⟩ := exists_mem_near_abs ε hε f hf
 
+  -- Apply the result that |·| can be arbitrarily approximated
+  obtain ⟨a, ha, ha_dist⟩ := exists_mem_near_abs ε hε f hf
   use a
+  
   constructor
+  -- Use that a ∈ A
   · exact ha
+  -- Show the distance is less than ε
   · rw [dist_eq_norm]
     rw [← neg_sub a |f|]
     rw [norm_neg]
     exact ha_dist
   done
+
 
 /- Proof of Max identity with absolute value for Reals -/
 lemma max_id_abs (x y : ℝ) : max x y = 1/2 * (x + y + |x - y|) := by
@@ -189,8 +215,8 @@ lemma inf_mem_of_closed_subalg (f g : A) (hA : IsClosed (A : Set C(Ω, ℝ))) :
 -- abbrev SeparatesPoints (A : Subalgebra ℝ C(Ω, ℝ)) : Prop :=
 --   Set.SeparatesPoints (A : Set C(Ω, ℝ))
 
--- /- Uryshon Lemma -/
 
+-- /- Uryshon Lemma -/
 -- lemma Urysohn () : F.SeparatesPoints
 
 
@@ -204,6 +230,7 @@ lemma subalg_closure_sep_points (h_sep : A.SeparatesPoints) :
   · apply Set.image_mono A.le_topologicalClosure
     exact hf_in_A
   · exact hf_sep
+
 
 /- Proof that there exists a function in the Subalgebra that matches any function at 2 points -/
 -- lemma SubAlgClosureMatchesAt2Points {f : C(Ω, ℝ)} {g_xy : A} (hF: F.SeparatesPoints) :
