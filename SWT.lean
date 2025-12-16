@@ -1,7 +1,6 @@
 /- To Do List: -/
 -- Update definitions regarding polynomials and images of functions
 -- Redefine variables, assumptions and name spaces
--- Comment code better
 -- Simplify lemmas with max/min or sup/inf
 -- Make the subalgebra non unital
 
@@ -214,16 +213,6 @@ lemma inf_mem_of_closed_subalg (f g : A) (hA : IsClosed (A : Set C(Ω, ℝ))) :
       · apply SetLike.coe_mem
     · apply hA
   done
-
-
--- /- Definition of a Set of functions separating points -/
--- def SetSeparatesPoints {α β : Type*} (S : Set (α → β)) : Prop :=
---   ∀ {x y : α}, x ≠ y → ∃ f ∈ S, (f x ≠ f y)
-
-
--- /- Definition of what it means for a Subalgebra of C(Ω, ℝ) to separate points -/
--- abbrev SeparatesPoints (A : Subalgebra ℝ C(Ω, ℝ)) : Prop :=
---   Set.SeparatesPoints (A : Set C(Ω, ℝ))
 
 
 -- /- Uryshon Lemma -/
