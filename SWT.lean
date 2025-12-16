@@ -173,7 +173,7 @@ lemma min_id_abs_func (f g : C(Ω, ℝ)) :
 
 /- Proof that a Subalgebra is topologically closed under pointwise maximum -/
 lemma sup_mem_of_closed_subalg (f g : A) (hA : IsClosed (A : Set C(Ω, ℝ))) :
-    ↑f ⊔ ↑g ∈ A := by
+    (f : C(Ω, ℝ)) ⊔ (g : C(Ω, ℝ)) ∈ A := by
   -- Apply the sup identity
   rw [max_id_abs_func]
   -- Simplify and split into terms that are trivially in A
@@ -195,7 +195,7 @@ lemma sup_mem_of_closed_subalg (f g : A) (hA : IsClosed (A : Set C(Ω, ℝ))) :
 
 /- Proof that a Subalgebra is topologically closed under pointwise minimum -/
 lemma inf_mem_of_closed_subalg (f g : A) (hA : IsClosed (A : Set C(Ω, ℝ))) :
-    ↑f ⊓ ↑g ∈ A := by
+    (f : C(Ω, ℝ)) ⊓ (g : C(Ω, ℝ)) ∈ A := by
   -- Apply the sup identity
   rw [min_id_abs_func]
   -- Simplify and split into terms that are trivially in A
