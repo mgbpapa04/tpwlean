@@ -235,9 +235,35 @@ lemma subalg_closure_sep_points (h_sep : A.SeparatesPoints) :
 
 
 /- Proof that there exists a function in the Subalgebra that matches any function at 2 points -/
--- lemma SubAlgClosureMatchesAt2Points {f : C(Ω, ℝ)} {g_xy : A} (hF: F.SeparatesPoints) :
---     ∀ x y : Ω, x ≠ y → ∃ g_xy, (g_xy x = f x) ∧ (g_xy y = f y) := by
---   sorry
+lemma SubAlgClosureMatchesAt2Points {f : C(Ω, ℝ)} (hA : A.SeparatesPoints) :
+    ∀ x y : Ω, x ≠ y → ∃ g ∈ A, (g x = f x) ∧ (g y = f y) := by
+  intro x y hxy
+  obtain ⟨h_fun, h_in_fun_A, h_sep⟩ := hA hxy
+  obtain ⟨h, h_mem, h_eq⟩ := h_in_fun_A
+  rw [← h_eq] at h_sep
+  have h_diff : h x - h y ≠ 0 := sub_ne_zero.mpr h_sep
+  let a := f x / (h x - h y)
+  let b := f y / (h y - h x)
+  use a • (h - ContinuousMap.C (h y)) + b • (h - ContinuousMap.C (h x))
+  constructor
+  · apply A.add_mem
+    · apply A.smul_mem
+      apply A.sub_mem
+      · exact h_mem
+      · apply A.algebraMap_mem
+    · apply A.smul_mem
+      apply A.sub_mem
+      · exact h_mem
+      · apply A.algebraMap_mem
+  · constructor
+    · simp [a, b, ContinuousMap.add_apply, ContinuousMap.smul_apply, ContinuousMap.sub_apply,
+        ContinuousMap.C_apply]
+      field
+    · simp [a, b, ContinuousMap.add_apply, ContinuousMap.smul_apply, ContinuousMap.sub_apply,
+        ContinuousMap.C_apply]
+      have h_diff' : h y - h x ≠ 0 := sub_ne_zero.mpr (Ne.symm h_sep)
+      field
+    done
 
 
 /- The Stone-Weierstrass Theorem -/
