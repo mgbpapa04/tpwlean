@@ -11,3 +11,4 @@ require mathlib from git
 @[default_target]
 lean_lib «Tpwlean» where
   -- The library name
+  roots := #[`SWT, `UAT]

@@ -1,6 +1,6 @@
 // Lean compiler output
-// Module: Tpwlean
-// Imports: public import Init public import SWT public import UATemp
+// Module: SWT
+// Imports: public import Init public import Mathlib.Tactic public import Mathlib.Topology.ContinuousMap.Lattice public import Mathlib.Topology.ContinuousMap.Weierstrass
 #include <lean/lean.h>
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wunused-parameter"
@@ -14,20 +14,24 @@
 extern "C" {
 #endif
 lean_object* initialize_Init(uint8_t builtin, lean_object*);
-lean_object* initialize_SWT(uint8_t builtin, lean_object*);
-lean_object* initialize_UATemp(uint8_t builtin, lean_object*);
+lean_object* initialize_Mathlib_Tactic(uint8_t builtin, lean_object*);
+lean_object* initialize_Mathlib_Topology_ContinuousMap_Lattice(uint8_t builtin, lean_object*);
+lean_object* initialize_Mathlib_Topology_ContinuousMap_Weierstrass(uint8_t builtin, lean_object*);
 static bool _G_initialized = false;
-LEAN_EXPORT lean_object* initialize_Tpwlean(uint8_t builtin, lean_object* w) {
+LEAN_EXPORT lean_object* initialize_SWT(uint8_t builtin, lean_object* w) {
 lean_object * res;
 if (_G_initialized) return lean_io_result_mk_ok(lean_box(0));
 _G_initialized = true;
 res = initialize_Init(builtin, lean_io_mk_world());
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
-res = initialize_SWT(builtin, lean_io_mk_world());
+res = initialize_Mathlib_Tactic(builtin, lean_io_mk_world());
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
-res = initialize_UATemp(builtin, lean_io_mk_world());
+res = initialize_Mathlib_Topology_ContinuousMap_Lattice(builtin, lean_io_mk_world());
+if (lean_io_result_is_error(res)) return res;
+lean_dec_ref(res);
+res = initialize_Mathlib_Topology_ContinuousMap_Weierstrass(builtin, lean_io_mk_world());
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 return lean_io_result_mk_ok(lean_box(0));

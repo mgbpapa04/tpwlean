@@ -1,13 +1,9 @@
 {"plugins": [],
  "options": {},
- "name": "Tpwlean",
+ "name": "SWT",
  "isModule": false,
  "importArts":
- {"UATemp":
-  ["C:\\Users\\isaac\\VSC_Projects\\tpwlean_UATheorem\\tpwlean\\.lake\\build\\lib\\lean\\UATemp.olean"],
-  "SWT":
-  ["C:\\Users\\isaac\\VSC_Projects\\tpwlean_UATheorem\\tpwlean\\.lake\\build\\lib\\lean\\SWT.olean"],
-  "Qq.Typ":
+ {"Qq.Typ":
   ["C:\\Users\\isaac\\VSC_Projects\\tpwlean_UATheorem\\tpwlean\\.lake\\packages\\Qq\\.lake\\build\\lib\\lean\\Qq\\Typ.olean",
    "C:\\Users\\isaac\\VSC_Projects\\tpwlean_UATheorem\\tpwlean\\.lake\\packages\\Qq\\.lake\\build\\lib\\lean\\Qq\\Typ.ir",
    "C:\\Users\\isaac\\VSC_Projects\\tpwlean_UATheorem\\tpwlean\\.lake\\packages\\Qq\\.lake\\build\\lib\\lean\\Qq\\Typ.olean.server",
@@ -2982,10 +2978,6 @@
   ["C:\\Users\\isaac\\VSC_Projects\\tpwlean_UATheorem\\tpwlean\\.lake\\packages\\mathlib\\.lake\\build\\lib\\lean\\Mathlib\\GroupTheory\\Archimedean.olean"],
   "Mathlib.GroupTheory.Abelianization.Defs":
   ["C:\\Users\\isaac\\VSC_Projects\\tpwlean_UATheorem\\tpwlean\\.lake\\packages\\mathlib\\.lake\\build\\lib\\lean\\Mathlib\\GroupTheory\\Abelianization\\Defs.olean"],
-  "Mathlib.Geometry.Euclidean.PerpBisector":
-  ["C:\\Users\\isaac\\VSC_Projects\\tpwlean_UATheorem\\tpwlean\\.lake\\packages\\mathlib\\.lake\\build\\lib\\lean\\Mathlib\\Geometry\\Euclidean\\PerpBisector.olean"],
-  "Mathlib.Geometry.Euclidean.Basic":
-  ["C:\\Users\\isaac\\VSC_Projects\\tpwlean_UATheorem\\tpwlean\\.lake\\packages\\mathlib\\.lake\\build\\lib\\lean\\Mathlib\\Geometry\\Euclidean\\Basic.olean"],
   "Mathlib.Geometry.Convex.Cone.Basic":
   ["C:\\Users\\isaac\\VSC_Projects\\tpwlean_UATheorem\\tpwlean\\.lake\\packages\\mathlib\\.lake\\build\\lib\\lean\\Mathlib\\Geometry\\Convex\\Cone\\Basic.olean"],
   "Mathlib.FieldTheory.Tower":

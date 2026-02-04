@@ -1,11 +1,9 @@
 {"plugins": [],
  "options": {},
- "name": "Tpwlean",
+ "name": "UATemp",
  "isModule": false,
  "importArts":
- {"UATemp":
-  ["C:\\Users\\isaac\\VSC_Projects\\tpwlean_UATheorem\\tpwlean\\.lake\\build\\lib\\lean\\UATemp.olean"],
-  "SWT":
+ {"SWT":
   ["C:\\Users\\isaac\\VSC_Projects\\tpwlean_UATheorem\\tpwlean\\.lake\\build\\lib\\lean\\SWT.olean"],
   "Qq.Typ":
   ["C:\\Users\\isaac\\VSC_Projects\\tpwlean_UATheorem\\tpwlean\\.lake\\packages\\Qq\\.lake\\build\\lib\\lean\\Qq\\Typ.olean",
