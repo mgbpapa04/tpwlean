@@ -14,6 +14,7 @@ set_option linter.unusedTactic false -- Clears done warnings
 namespace SWT
 open ContinuousMap Set
 
+
 -- ===============================================================
 --   PART 1: Real Number Identities
 -- ===============================================================
@@ -31,6 +32,7 @@ lemma max_id_abs (x y : ℝ) : max x y = 1/2 * (x + y + |x - y|) := by
     ring -- Verify: x = 1/2 * (x + y + (x - y)) → x = 1/2 * 2x → x = x
   done
 
+
 /- Proof of min(x, y) = (x + y - |x - y|) / 2 for x, y ∈ ℝ -/
 lemma min_id_abs (x y : ℝ) : min x y = 1/2 * (x + y - |x - y|) := by
   cases le_total x y with -- Split into cases based cases: either x ≤ y or y ≤ x.
@@ -43,6 +45,7 @@ lemma min_id_abs (x y : ℝ) : min x y = 1/2 * (x + y - |x - y|) := by
     rw [abs_of_nonneg (sub_nonneg_of_le geq)] -- |x - y| = x - y
     ring -- Verify: y = 1/2 * (x + y - (x - y)) → y = 1/2 * 2y
   done
+
 
 -- ===============================================================
 --   PART 2: Function Lattice Operations
@@ -58,6 +61,7 @@ lemma max_id_abs_func (f g : C(Ω, ℝ)) : f ⊔ g = (1/2 : ℝ) • (f + g + |f
   simp
   done
 
+
 /- Proof of pointwise Min identity with absolute value for Functions -/
 lemma min_id_abs_func (f g : C(Ω, ℝ)) : f ⊓ g = (1/2 : ℝ) • (f + g - |f - g|) := by
   ext x -- Two functions are equal if they agree at all points x (extensionality)
@@ -65,6 +69,7 @@ lemma min_id_abs_func (f g : C(Ω, ℝ)) : f ⊓ g = (1/2 : ℝ) • (f + g - |f
   rw [min_id_abs] -- Apply the lemma we just proved for reals.
   simp
   done
+
 
 -- ===============================================================
 --   PART 3: Subalgebra Properties
@@ -111,6 +116,7 @@ lemma polynomial_comp_mem_subalg (p : Polynomial ℝ) (f : C(Ω, ℝ)) (hf : f �
     bound
   done
 
+
 /- Proof that there exists a function in the Subalgebra that matches any function at 2 points -/
 -- Note that the assumption that A separates points implies that Ω is Hausdorff.
 lemma exists_mem_subalg_interp_two {f : C(Ω, ℝ)} (hA : A.SeparatesPoints) :
@@ -155,6 +161,7 @@ lemma exists_mem_subalg_interp_two {f : C(Ω, ℝ)} (hA : A.SeparatesPoints) :
       have h_diff : h y - h x ≠ 0 := sub_ne_zero.mpr (Ne.symm h_sep) -- Avoid zero division
       field
   done
+
 
 -- ===============================================================
 --   PART 4: Absolute Value Approximation in the subalgebra A
@@ -463,6 +470,7 @@ lemma exists_mem_local_upper_bound (f : C(Ω, ℝ)) (x : Ω) (ε : ℝ) (hε : 0
     apply Finset.le_sup' (fun i => G i z) hy_s -- Apply the fact that g_x(z) is the max
   done
 
+
 -- ===============================================================
 --   PART 8: Global Approximation / Stone Weierstrass Theorem
 -- ===============================================================
@@ -614,8 +622,10 @@ theorem SWT_top (h_sep : A.SeparatesPoints) :
     exact hg_dist -- Use the conclusion from the previous lemma
   done
 
+
 -- Proof that ⊤ = C(Ω, ℝ) as above (i.e. the top of the lattice is C(Ω, ℝ))
 example : ((⊤ : Subalgebra ℝ C(Ω, ℝ)) : Set C(Ω, ℝ)) = Set.univ := rfl
+
 
 -- Proof that the closure of A is C(Ω, ℝ)
 lemma SWT_cont (h_sep : A.SeparatesPoints) : (A.topologicalClosure : Set C(Ω, ℝ)) = Set.univ := by

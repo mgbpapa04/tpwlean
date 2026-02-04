@@ -25,20 +25,25 @@ variable (Ω : Set (EuclideanSpace ℝ (Fin d))) [CompactSpace Ω]  -- Compact d
 def IsNonPolynomial (σ : ℝ → ℝ) : Prop :=
   ∀ (p : Polynomial ℝ), (fun x ↦ p.eval x) ≠ σ
 
+
 -- A general continuous non-polynomial activation function
 variable (σ : ℝ → ℝ) (hσ_cont : Continuous σ) (h_nonpoly : IsNonPolynomial σ)
+
 
 -- A single Neuron: x ↦ σ(wᵀx + b)
 noncomputable def neuron (w : EuclideanSpace ℝ (Fin d)) (b : ℝ) : C(Ω, ℝ) :=
   ⟨fun x: Ω ↦ σ (inner ℝ w x.1 + b), by fun_prop⟩
 
+
 -- The set of all possible single neurons on Ω
 def SetOfNeurons : Set C(Ω, ℝ) :=
   {f | ∃ (w : EuclideanSpace ℝ (Fin d)) (b : ℝ), f = neuron Ω σ hσ_cont w b}
 
+
 -- A Single-Layer Perceptron (F_sigma): The span of the set of neurons
 def F_sigma : Submodule ℝ C(Ω, ℝ) :=
   Submodule.span ℝ (SetOfNeurons Ω σ hσ_cont)
+
 
 -- The closure of F_sigma = A, i.e. the set of functions approximable by networks
 noncomputable def A : Submodule ℝ C(Ω, ℝ) :=
@@ -61,6 +66,7 @@ lemma neuron_mul_neuron_exp (w1 w2 : EuclideanSpace ℝ (Fin d)) (b1 b2 : ℝ) :
   rw[← Real.exp_add, inner_add_left] -- Use the property that exp(a + b) = exp(a) * exp(b) and the linearity of inner products
   simp only [Real.exp_eq_exp] -- Use the property that exp(x) = exp(y) ↔ x = y
   field -- Simplify the expression
+
 
 -- The constant function 1 is in the class of exponential neurons (1 = exp(⟨0, x⟩ + 0))
 lemma one_mem_F_exp : (1 : C(Ω, ℝ)) ∈ F_sigma Ω Real.exp Real.continuous_exp := by
