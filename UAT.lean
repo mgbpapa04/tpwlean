@@ -7,8 +7,8 @@ import SWT
 
 /- Linters -/
 -- set_option diagnostics true
-set_option linter.unusedSectionVars false
--- set_option linter.unusedTactic false  -- Clears done warnings
+-- set_option linter.unusedSectionVars false
+set_option linter.unusedTactic false  -- Clears done warnings
 
 section UniversalApproximation
 open ContinuousMap Set
@@ -19,7 +19,7 @@ open ContinuousMap Set
 -- ===============================================================
 
 variable {d : ℕ}  -- Dimension of the input space
-variable (Ω : Set (EuclideanSpace ℝ (Fin d))) [CompactSpace Ω]  -- Compact domain
+variable (Ω : Set (EuclideanSpace ℝ (Fin d))) -- Domain (later assumed to be compact)
 
 -- A Non-polynomial function
 def IsNonPolynomial (σ : ℝ → ℝ) : Prop :=
@@ -66,6 +66,7 @@ lemma neuron_mul_neuron_exp (w1 w2 : EuclideanSpace ℝ (Fin d)) (b1 b2 : ℝ) :
   rw[← Real.exp_add, inner_add_left] -- Use the property that exp(a + b) = exp(a) * exp(b) and the linearity of inner products
   simp only [Real.exp_eq_exp] -- Use the property that exp(x) = exp(y) ↔ x = y
   field -- Simplify the expression
+  done
 
 
 -- The constant function 1 is in the class of exponential neurons (1 = exp(⟨0, x⟩ + 0))
@@ -77,6 +78,7 @@ lemma one_mem_F_exp : (1 : C(Ω, ℝ)) ∈ F_sigma Ω Real.exp Real.continuous_e
   rw [h1] -- Use this as the candidate neuron
   apply Submodule.subset_span -- Show that this is in the span
   use 0, 0 -- Use the zero weight and bias as the candidate neuron
+  done
 
 
 -- The product of two elements in F_exp is in F_exp
@@ -123,6 +125,7 @@ lemma mul_mem_F_exp (f g : C(Ω, ℝ)) (hf : f ∈ F_sigma Ω Real.exp Real.cont
     intro g hg -- Pick g
     rw [smul_mul_assoc] -- The product is just the scalar multiple of f * g
     exact Submodule.smul_mem _ r (ih g hg) -- The scalar multiple of a product of neurons is in the span F_exp
+  done
 
 
 -- Define F_exp to be the subalgebra of C(Ω, ℝ) that the submodule of single layer perceptrons form
@@ -184,6 +187,7 @@ lemma F_exp_separates_points : (F_exp Ω).SeparatesPoints := by
   -- 5. Show that f(x) = e and f(y) = 1
     rw [h_inner_x, h_inner_y, Real.exp_zero]
     simp only [ne_eq, Real.exp_eq_one_iff, one_ne_zero, not_false_eq_true] -- Use that e ≠ 1 thus f(x) ≠ f(y)
+  done
 
 
 -- ===============================================================
@@ -192,9 +196,13 @@ lemma F_exp_separates_points : (F_exp Ω).SeparatesPoints := by
 --     · We can apply SWT to show that F_exp is dense in C(Ω, ℝ)
 -- ===============================================================
 
+-- Define the domain to be compact
+variable [CompactSpace Ω]
+
 -- Show that F_exp is dense in C(Ω, ℝ)
 lemma F_exp_UAT_top : (F_exp Ω).topologicalClosure = ⊤ := by
   exact SWT.SWT_top (F_exp_separates_points Ω) -- Apply SWT
+  done
 
 -- Show that the submodule of exponential neurons is dense in C(Ω, ℝ)
 example : Submodule.topologicalClosure (F_sigma Ω Real.exp Real.continuous_exp) = ⊤ := by
@@ -203,6 +211,7 @@ example : Submodule.topologicalClosure (F_sigma Ω Real.exp Real.continuous_exp)
   have h_set_eq := congr_arg SetLike.coe (F_exp_UAT_top Ω) -- Use the density of the algebra
   change closure ((F_sigma Ω Real.exp Real.continuous_exp) : Set C(Ω, ℝ)) = Set.univ -- Convert to set closure
   exact h_set_eq -- Show that the closure is the universal set
+  done
 
 
 -- Equivalence Check: Shows that ⊤ is indeed the set of all functions C(Ω, ℝ)
@@ -213,9 +222,11 @@ example : ((⊤ : Submodule ℝ C(Ω, ℝ)) : Set C(Ω, ℝ)) = Set.univ := rfl
 -- Show closure(F_exp) = C(Ω, ℝ)
 lemma F_exp_UAT_cont : ((F_exp Ω).topologicalClosure : Set C(Ω, ℝ)) = Set.univ := by
   exact SWT.SWT_cont (F_exp_separates_points Ω) -- Apply SWT
+  done
 
 example : (Submodule.topologicalClosure (F_sigma Ω Real.exp Real.continuous_exp) : Set C(Ω, ℝ)) = Set.univ := by
   exact SWT.SWT_cont (F_exp_separates_points Ω) -- Apply SWT
+  done
 
 
 -- UAT for F_exp i.e. any f ∈ C(Ω, ℝ) can be arbitrarily approximated by a function g ∈ F_exp
@@ -236,11 +247,13 @@ theorem F_exp_UAT (f : C(Ω, ℝ)) (ε : ℝ) (hε : 0 < ε) :
   · finiteness -- Use g ∈ F_exp
   · rw [dist_eq_norm, norm_sub_rev] at hf_dist -- Rewrite the distance statement as a norm
     exact hf_dist
+  done
 
 -- UAT for the submodule of exponential neurons
 example (f : C(Ω, ℝ)) (ε : ℝ) (hε : 0 < ε) :
     ∃ g ∈ (F_sigma Ω Real.exp Real.continuous_exp), ‖g - f‖ < ε := by
   apply F_exp_UAT -- Use the result for the subalgebra
   exact hε -- Use ε > 0
+  done
 
 end UniversalApproximation
