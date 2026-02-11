@@ -1,8 +1,8 @@
 {"synthetic": false,
  "schemaVersion": "2025-09-10",
  "outputs":
- {"o": ["79b5519c58150c81.olean"],
-  "i": "60cc1a9d305a6552.ilean",
+ {"o": ["c4d93630b72a7fd1.olean"],
+  "i": "e79e14ababdb015e.ilean",
   "c": "fe404dd088b279e8.c"},
  "log":
  [{"message":
@@ -31,7 +31,7 @@
   ["Lean 4.25.0, commit 744f98064b056ee27fc8c97f524797c8cc96f436",
    "4bbac11c6209e48b"],
   ["C:\\Users\\isaac\\VSC_Projects\\tpwlean_UATheorem\\tpwlean\\SWT.lean",
-   "e6539f73fb5b59ed"],
+   "ba1ae6fe4b0e3487"],
   ["options", "00000000000006bb"],
   ["Module.leanArgs: #[]", "00000000000006bb"]],
- "depHash": "b3dbabb5f1f8ede4"}
+ "depHash": "2102143fc63f7e50"}

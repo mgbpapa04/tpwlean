@@ -1,6 +1,3 @@
-/- To Do List: -/
--- Redefine variables, assumptions and name spaces
-
 /- Imports -/
 import Mathlib.Tactic
 import Mathlib.Topology.ContinuousMap.Lattice
@@ -10,6 +7,7 @@ import Mathlib.Topology.ContinuousMap.Weierstrass
 -- set_option diagnostics true
 -- set_option linter.unusedSectionVars false
 set_option linter.unusedTactic false -- Clears done warnings
+
 
 namespace SWT
 open ContinuousMap Set
