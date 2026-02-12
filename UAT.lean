@@ -34,7 +34,7 @@ def SetOfNeurons : Set C(Ω, ℝ) :=
   {f | ∃ (w : EuclideanSpace ℝ (Fin d)) (b : ℝ), f = neuron Ω σ hσ_cont w b}
 
 
--- A Single-Layer Perceptron (F_sigma): The span of the set of neurons
+-- A shallow neural network (F_sigma): The span of the set of neurons
 def F_sigma : Submodule ℝ C(Ω, ℝ) :=
   Submodule.span ℝ (SetOfNeurons Ω σ hσ_cont)
 
@@ -117,7 +117,7 @@ lemma mul_mem_F_exp (f g : C(Ω, ℝ)) (hf : f ∈ F_sigma Ω Real.exp Real.cont
   done
 
 
--- Define F_exp to be the subalgebra of C(Ω, ℝ) that the submodule of single layer perceptrons form
+-- Define F_exp to be the subalgebra of C(Ω, ℝ) that the submodule of shallow neural networks form
 noncomputable def F_exp : Subalgebra ℝ C(Ω, ℝ) where
   -- 1. The underlying set is the F_exp submodule of the span of exponential neurons
   carrier := F_sigma Ω Real.exp Real.continuous_exp
@@ -252,7 +252,7 @@ example (f : C(Ω, ℝ)) (ε : ℝ) (hε : 0 < ε) :
 /-
 Proof of the UAT for F_sigma with σ a continuous monotonic function that tends to 1 at inf and 0 at -inf
   · This uses the intermediate result that F_exp is dense in C(Ω, ℝ)
-  · We define H_sigma as a single layer perceptron from a compact set T ⊆ ℝ → ℝ with this activation function can approximate the exponential function
+  · We define H_sigma as a shallow neural network from a compact set T ⊆ ℝ → ℝ with this activation function can approximate the exponential function
   · This hardest part of the proof is showing that this H_sigma can approximate the exponential function on T (we have not done this)
   · The approach we take for this is as follows:
     1. Define H_sigma as the span of the set of scalar neurons over T
@@ -290,14 +290,14 @@ def SetOfScalarNeurons (T : Set ℝ) : Set C(T, ℝ) :=
   {f | ∃ (u v : ℝ), f = fun t : T ↦ σ (u * (t : ℝ) + v)}
 
 
--- We define the submodule H_sigma formed by the span of these scalar neurons (Single layer perceptrons T ⊆ ℝ → ℝ)
+-- We define the submodule H_sigma formed by the span of these scalar neurons (shallow neural networks T ⊆ ℝ → ℝ)
 def H_sigma (T : Set ℝ) : Submodule ℝ C(T, ℝ) :=
   Submodule.span ℝ (SetOfScalarNeurons σ T)
 
 
 -- ===============================================================
 --   PART 5: Show H_sigma can approximate exp to arbitrary precision
---     · We defined H_sigma as a single layer perceptron from a compact subset T ⊆ ℝ → ℝ
+--     · We defined H_sigma as a shallow neural network from a compact subset T ⊆ ℝ → ℝ
 --     · We can then show that H_sigma can approximate exp to arbitrary precision on T
 --     · This will allow us to swap the exponential activation function with an approximation in H_sigma
 -- ===============================================================
@@ -538,6 +538,7 @@ theorem monotone_UAT_top : Submodule.topologicalClosure (F_sigma Ω σ hσ_cont)
   rw [F_exp_UAT_cont Ω] -- Use the fact that F_exp is dense in C(Ω, ℝ) (from part 4)
   simp only [mem_univ] -- Use the fact that f is trivially in C(Ω, ℝ)
   done
+
 
 -- ε-δ version of the UAT for monotone continuous activation functions
 -- Proof is exactly the same as the proof of F_exp_UAT from F_exp_UAT_top
