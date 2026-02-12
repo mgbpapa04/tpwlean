@@ -260,13 +260,11 @@ Proof of the UAT for F_sigma with σ a continuous monotonic function that tends 
         · e.g. (tanh + 1)/2 is an example of this type of activation function (i.e. monotonic, continuous, with the right limits)
         · Imagine the function (tanh(wx - wb) + 1)/2
         · As w approaches infinity, the function approaches θ(x-b) (heavyside step function at b)
-    3. Show that H_sigma can approximate indicator or "bump" functions (the difference of these )
-        · An inidicator function 1_{a,b} = θ(x-a) - θ(x-b) so we use our approximation in H_sigma
-    4. Show that exp can be approximated by indicator functions on T (and thus by H_sigma)
-    5. Show that our approximation of exp composed with an affine map is an element of F_sigma
-    6. Show that an element of F_sigma (namely the one we just showed was in F_sigma) can approxmiate an exponential neuron
-    7. Show that any function in the algebra F_exp can be approximated by F_sigma (i.e. F_exp = Closure(F_sigma))
-    8. Show that Closure(F_sigma) = ⊤ = C(Ω, ℝ) i.e. the UAT for F_sigma
+    3. Show that exp can be approximated by step functions on T (and thus by H_sigma)
+    4. Show that our approximation of exp composed with an affine map is an element of F_sigma
+    5. Show that an element of F_sigma (namely the one we just showed was in F_sigma) can approxmiate an exponential neuron
+    6. Show that any function in the algebra F_exp can be approximated by F_sigma (i.e. F_exp = Closure(F_sigma))
+    7. Show that Closure(F_sigma) = ⊤ = C(Ω, ℝ) i.e. the UAT for F_sigma
 -/
 
 -- A class for activation functions that are "sigmoidal"
@@ -373,10 +371,11 @@ noncomputable def ext_T : C(T, ℝ) := ⟨fun t => Real.exp t.1, Real.continuous
 
 
 -- Any exponential function can be approximated by a function in H_sigma
--- We haven't been able to prove this result, as it relies on a very fiddely construction with bump functions
---  1. We have shown that σ can approximate step functions on T (shown above)
---  2. Show that the difference of two step functions is an indicator function
---  3. Show that linear combinations of indicator functions can arbritarily approximate the exponential function on T
+-- We haven't been able to prove this result, as it relies on a very fiddely construction with step functions
+--  1. We have shown that σ can approximate a step function on T (shown above).
+--  2. Since exp is monotone, we can approximate it with a "staircase" of step functions.
+--  3. We replace the sharp steps with the smooth sigmoids.
+--  4. Since both exp and our approximation are monotone, we can bound the error in the transition regions
 lemma exp_in_H_sigma (ε : ℝ) (hε : 0 < ε) :
     ∃ h ∈ H_sigma σ T, ‖h - ext_T‖ < ε := by
   sorry
