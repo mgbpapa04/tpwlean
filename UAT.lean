@@ -1,5 +1,8 @@
+/- We have used AI tools (mostly the Google AI Overview) when searching for results that we expected
+to be formalised in Mathlib, but that we were not able to find in the Mathlib documentation. -/
+
 /- Imports -/
--- Import the SWT file (Contains the imports we need including Mathlib.Tactic etc.)
+-- Import the SWT file (Contains all the imports we need including Mathlib.Tactic etc.)
 import SWT
 
 /- Linters -/
@@ -423,6 +426,7 @@ lemma lift_H_sigma_to_F_sigma (L : C(Ω, T)) (hL : ∀ x, (L x : ℝ) = inner �
   case smul r x hx hx_in =>
     simp only [smul_comp] -- Composition of scalar multiplication is scalar multiplication of the composition
     exact Submodule.smul_mem _ r hx_in -- H_sigma closed under scalar multiplication
+  done
 
 
 -- Any exponential neuron exp(w·x + b) can be approximated by functions in F_sigma

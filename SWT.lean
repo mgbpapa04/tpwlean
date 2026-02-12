@@ -1,3 +1,6 @@
+/- We have used AI tools (mostly the Google AI Overview) when searching for results that we expected
+to be formalised in Mathlib, but that we were not able to find in the Mathlib documentation. -/
+
 /- Imports -/
 import Mathlib.Tactic
 import Mathlib.Topology.ContinuousMap.Lattice
